@@ -20,10 +20,16 @@ const (
 	// Operators
 	ASSIGN = "="
 	PLUS = "+"
+	GT = ">"
+	LT = "<"
+	ASTERISK = "*"
+	SLASH = "/"
+	MINUS = "-"
 
 	// Delimiters
 	COMMA = ","
 	SEMICOLON = ";"
+	BANG = "!"
 
 	LPAREN = "("
 	RPAREN = ")"
