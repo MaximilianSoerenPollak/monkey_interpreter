@@ -207,9 +207,9 @@ func testIntegerLiteral(t *testing.T, il ast.Expression, value int64) bool {
 
 func TestParsingInfixExpressions(t *testing.T) {
 	inifixTests := []struct {
-		input string 
-		leftValue int64
-		operator string 
+		input      string
+		leftValue  int64
+		operator   string
 		rightValue int64
 	}{
 		{"5 + 5;", 5, "+", 5},
@@ -239,13 +239,13 @@ func TestParsingInfixExpressions(t *testing.T) {
 			t.Fatalf("exp is not ast.inifExpression. got=%T", stmt.Expression)
 		}
 		if !testIntegerLiteral(t, exp.Left, tt.leftValue) {
-			return 
+			return
 		}
 		if exp.Operator != tt.operator {
 			t.Fatalf("exp.Operator is not '%s'. got=%s", tt.operator, exp.Operator)
 		}
 		if !testIntegerLiteral(t, exp.Right, tt.rightValue) {
-			return 
+			return
 		}
 	}
 }

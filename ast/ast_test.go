@@ -1,10 +1,9 @@
-package ast 
+package ast
 
 import (
 	"monkey_interpreter/token"
 	"testing"
 )
-
 
 func TestString(t *testing.T) {
 	program := &Program{
@@ -20,10 +19,9 @@ func TestString(t *testing.T) {
 					Value: "antoehrVar",
 				},
 			},
-		},	
+		},
 	}
 	if program.String() != "let myVar = anotherVar;" {
 		t.Errorf("program.String() wrong. got=%q", program.String())
 	}
 }
-

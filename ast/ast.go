@@ -58,10 +58,10 @@ type PrefixExpression struct {
 }
 
 type InfixExpression struct {
-	Token token.Token // operator Token like * or /
-	Left Expression
-	Operator string 
-	Right Expression
+	Token    token.Token // operator Token like * or /
+	Left     Expression
+	Operator string
+	Right    Expression
 }
 
 func (p *Program) TokenLiteral() string {
