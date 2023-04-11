@@ -4,9 +4,10 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"monkey_interpreter/lexer"
-	"monkey_interpreter/parser"
 	"monkey_interpreter/evaluator"
+	"monkey_interpreter/lexer"
+	"monkey_interpreter/object"
+	"monkey_interpreter/parser"
 )
 
 const PROMPT = ">>"
@@ -26,6 +27,7 @@ const MONKEY_FACE = `            __,__
 
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
+	env := object.NewEnvironment()
 
 	for {
 		fmt.Fprint(out, PROMPT)
@@ -43,7 +45,7 @@ func Start(in io.Reader, out io.Writer) {
 			printParserErrors(out, p.Errors())
 			continue
 		}
-		evaluated := evaluator.Eval(program)
+		evaluated := evaluator.Eval(program, env)
 		if evaluated != nil {
 			io.WriteString(out, evaluated.Inspect())
 			io.WriteString(out, "\n")
