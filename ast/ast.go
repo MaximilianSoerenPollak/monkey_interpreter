@@ -83,7 +83,7 @@ type BlockStatement struct {
 }
 
 type  FunctionLiteral struct {
-	Token token.Token
+	Token token.Token //the 'fn' token
 	Parameters []*Identifier
 	Body *BlockStatement
 }
