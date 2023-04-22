@@ -78,20 +78,25 @@ type IfExpression struct {
 }
 
 type BlockStatement struct {
-	Token token.Token // the { Token 
+	Token      token.Token // the { Token
 	Statements []Statement
 }
 
-type  FunctionLiteral struct {
-	Token token.Token //the 'fn' token
+type FunctionLiteral struct {
+	Token      token.Token //the 'fn' token
 	Parameters []*Identifier
-	Body *BlockStatement
+	Body       *BlockStatement
 }
 
 type CallExpression struct {
-	Token token.Token // the ( token 
-	Function Expression // identifier or function literal
-	Arguments []Expression 
+	Token     token.Token // the ( token
+	Function  Expression  // identifier or function literal
+	Arguments []Expression
+}
+
+type StringLiteral struct {
+	Token token.Token // the " token
+	Value string
 }
 
 func (p *Program) TokenLiteral() string {
@@ -214,27 +219,27 @@ func (ie *IfExpression) String() string {
 	return out.String()
 }
 
-func (bs *BlockStatement) expressionNode() {}
+func (bs *BlockStatement) expressionNode()      {}
 func (bs *BlockStatement) TokenLiteral() string { return bs.Token.Literal }
 func (bs *BlockStatement) String() string {
-	var out bytes.Buffer 
+	var out bytes.Buffer
 
-	for _,s := range bs.Statements {
+	for _, s := range bs.Statements {
 		out.WriteString(s.String())
 	}
 	return out.String()
 }
 
-func (fl *FunctionLiteral) expressionNode() {}
+func (fl *FunctionLiteral) expressionNode()      {}
 func (fl *FunctionLiteral) TokenLiteral() string { return fl.Token.Literal }
 func (fl *FunctionLiteral) String() string {
-	var out bytes.Buffer 
+	var out bytes.Buffer
 
 	params := []string{}
-	for _,p := range fl.Parameters {
+	for _, p := range fl.Parameters {
 		params = append(params, p.String())
 	}
-	
+
 	out.WriteString(fl.TokenLiteral())
 	out.WriteString("(")
 	out.WriteString(strings.Join(params, ","))
@@ -245,13 +250,13 @@ func (fl *FunctionLiteral) String() string {
 
 }
 
-func (ce *CallExpression) expressionNode() {}
+func (ce *CallExpression) expressionNode()      {}
 func (ce *CallExpression) TokenLiteral() string { return ce.Token.Literal }
 func (ce *CallExpression) String() string {
-	var out bytes.Buffer 
+	var out bytes.Buffer
 
-	args := []string{} 
-	for _,a := range ce.Arguments {
+	args := []string{}
+	for _, a := range ce.Arguments {
 		args = append(args, a.String())
 	}
 	out.WriteString(ce.Function.String())
@@ -261,3 +266,7 @@ func (ce *CallExpression) String() string {
 
 	return out.String()
 }
+
+func (sl *StringLiteral) expressionNode()      {}
+func (sl *StringLiteral) TokenLiteral() string { return sl.Token.Literal }
+func (sl *StringLiteral) String() string       { return sl.Token.Literal }

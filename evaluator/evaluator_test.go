@@ -120,8 +120,7 @@ func TestReturnStatements(t *testing.T) {
 		{"return 10;", 10},
 		{"return 10; 9;", 10},
 		{"9; return 2 * 5; 9;", 10},
-		{
-			`
+		{`
 if (10 > 1) {
 if (10 > 1) {
 return 10;
@@ -260,7 +259,7 @@ func TestFunctionObject(t *testing.T) {
 	}
 	if len(fn.Parameters) != 1 {
 		t.Fatalf("function has wrong parameters. Parameters=%+v",
-		fn.Parameters)
+			fn.Parameters)
 	}
 	if fn.Parameters[0].String() != "x" {
 		t.Fatalf("parameter is not 'x'. got=%q", fn.Parameters[0])
@@ -273,8 +272,8 @@ func TestFunctionObject(t *testing.T) {
 
 func TestFunctionApplication(t *testing.T) {
 	tests := []struct {
-		input string 
-		expected int64 
+		input    string
+		expected int64
 	}{
 		{"let identity = fn(x) { x; }; identity(5);", 5},
 		{"let identity = fn(x) { return x; }; identity(5);", 5},
@@ -289,12 +288,25 @@ func TestFunctionApplication(t *testing.T) {
 }
 
 func TestClosures(t *testing.T) {
-	input := 
-	`
-	let newAdder = fn(x) {
-		fn(y) { x + y };
-	};
-	let addTwo = newAdder(2);
-	addTwo(2);`
+	input := `
+let newAdder = fn(x) {
+	fn(y) { x + y };
+};
+let addTwo = newAdder(2);
+addTwo(2);`
+
 	testIntegerObject(t, testEval(input), 4)
+}
+
+func TestStringLiteral(t *testing.T) {
+	input := `"Hello World!"`
+
+	evaluated := testEval(input)
+	str, ok := evaluated.(*object.String)
+	if !ok {
+		t.Fatalf("object is not String. got=%T (%+v)", evaluated, evaluated)
+	}
+	if str.Value != "Hello World!" {
+		t.Errorf("String has wrong value. got=%q", str.Value)
+	}
 }

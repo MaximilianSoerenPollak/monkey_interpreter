@@ -28,7 +28,7 @@ var precedences = map[token.TokenType]int{
 	token.MINUS:    SUM,
 	token.SLASH:    PRODUCT,
 	token.ASTERISK: PRODUCT,
-	token.LPAREN: CALL,
+	token.LPAREN:   CALL,
 }
 
 type Parser struct {
@@ -60,6 +60,7 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.LPAREN, p.parseGroupedExpression)
 	p.registerPrefix(token.IF, p.parseIfExpression)
 	p.registerPrefix(token.FUNCTION, p.parseFunctionLiteral)
+	p.registerPrefix(token.STRING, p.parseStringLiteral)
 	p.infixParseFns = make(map[token.TokenType]infixParseFn)
 	p.registerInfix(token.PLUS, p.parseInfixExpression)
 	p.registerInfix(token.MINUS, p.parseInfixExpression)
@@ -114,7 +115,6 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 	stmt := &ast.ReturnStatement{Token: p.curToken}
 	p.nextToken()
 
-
 	stmt.ReturnValue = p.parseExpression(LOWEST)
 
 	if p.peekTokenIs(token.SEMICOLON) {
@@ -135,7 +135,7 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 		return nil
 	}
 	p.nextToken()
-	
+
 	stmt.Value = p.parseExpression(LOWEST)
 	//Skipping excprssions until we encounter semicolon -> Implement later
 
@@ -160,7 +160,7 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 	prefix := p.prefixParseFns[p.curToken.Type]
 	if prefix == nil {
 		p.noPrefxiparseError(p.curToken.Type)
-		return nil
+
 	}
 	leftExp := prefix()
 
@@ -367,10 +367,10 @@ func (p *Parser) parseCallExpression(function ast.Expression) ast.Expression {
 }
 
 func (p *Parser) parseCallArguments() []ast.Expression {
-	args := []ast.Expression{} 
+	args := []ast.Expression{}
 	if p.peekTokenIs(token.RPAREN) {
 		p.nextToken()
-		return args 
+		return args
 	}
 	p.nextToken()
 	args = append(args, p.parseExpression(LOWEST))
@@ -382,6 +382,9 @@ func (p *Parser) parseCallArguments() []ast.Expression {
 	if !p.expectPeek(token.RPAREN) {
 		return nil
 	}
-	return args 
+	return args
 }
 
+func (p *Parser) parseStringLiteral() ast.Expression {
+	return &ast.StringLiteral{Token: p.curToken, Value: p.curToken.Literal}
+}
