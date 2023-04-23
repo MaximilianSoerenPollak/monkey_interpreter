@@ -44,7 +44,6 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 	case *ast.IfExpression:
 		return evalIfExpression(node, env)
 	case *ast.ReturnStatement:
-		fmt.Println(node)
 		val := Eval(node.ReturnValue, env)
 		if isError(val) {
 			return val
@@ -63,7 +62,6 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		body := node.Body
 		return &object.Function{Parameters: params, Env: env, Body: body}
 	case *ast.StringLiteral:
-		fmt.Println(node)
 		return &object.String{Value: node.Value}
 	case *ast.CallExpression:
 		function := Eval(node.Function, env)
@@ -97,7 +95,6 @@ func evalProgram(program *ast.Program, env *object.Environment) object.Object {
 }
 
 func nativeBooltoBooleanObject(input bool) *object.Boolean {
-	fmt.Println(input)
 	if input {
 		return TRUE
 	} else {
@@ -141,6 +138,8 @@ func evalInfixExpression(operator string, left, right object.Object) object.Obje
 		return nativeBooltoBooleanObject(left == right)
 	case operator == "!=":
 		return nativeBooltoBooleanObject(left != right)
+	case left.Type() == object.STRING_OBJ && right.Type() == object.STRING_OBJ:
+		return evalStringInfixEspression(operator, left, right)
 	case left.Type() != right.Type():
 		return newError("type mismatch: %s %s %s",
 			left.Type(), operator, right.Type())
@@ -279,4 +278,13 @@ func unwrapReturnValue(obj object.Object) object.Object {
 	}
 
 	return obj
+}
+
+func evalStringInfixEspression(operator string, left, right object.Object) object.Object  {
+	if operator != "+" {
+		return newError("unknown operator: %s %s %s", left.Type(), operator, right.Type())
+	}
+	leftVal := left.(*object.String).Value
+	rightVal := right.(*object.String).Value
+	return &object.String{Value: leftVal + rightVal}
 }
