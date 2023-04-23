@@ -120,14 +120,13 @@ func TestReturnStatements(t *testing.T) {
 		{"return 10;", 10},
 		{"return 10; 9;", 10},
 		{"9; return 2 * 5; 9;", 10},
-		{`
-if (10 > 1) {
-if (10 > 1) {
-return 10;
-}
-return 1;
-}
-`,
+		{ `
+		if (10 > 1) {
+			if (10 > 1) {
+				return 10;
+			}
+			return 1;
+		}`,
 			10},
 	}
 	for _, tt := range tests {
@@ -167,14 +166,14 @@ func TestErrorHandling(t *testing.T) {
 		},
 		{
 			`
-if (10 > 1) {
-  if (10 > 1) {
-    return true + false;
-  }
+			if (10 > 1) {
+				if (10 > 1) {
+					return true + false;
+				}
 
-  return 1;
-}
-`,
+				return 1;
+			}
+			`,
 			"unknown operator: BOOLEAN + BOOLEAN",
 		},
 		{"foobar",
@@ -288,12 +287,13 @@ func TestFunctionApplication(t *testing.T) {
 }
 
 func TestClosures(t *testing.T) {
-	input := `
-let newAdder = fn(x) {
-	fn(y) { x + y };
-};
-let addTwo = newAdder(2);
-addTwo(2);`
+	input :=
+		`
+	let newAdder = fn(x) {
+		fn(y) { x + y };
+	};
+	let addTwo = newAdder(2);
+	addTwo(2);`
 
 	testIntegerObject(t, testEval(input), 4)
 }

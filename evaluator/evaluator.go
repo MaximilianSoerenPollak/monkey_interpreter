@@ -14,7 +14,6 @@ var (
 
 func Eval(node ast.Node, env *object.Environment) object.Object {
 	switch node := node.(type) {
-
 	case *ast.Program:
 		return evalProgram(node, env)
 	case *ast.ExpressionStatement:
@@ -45,6 +44,7 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 	case *ast.IfExpression:
 		return evalIfExpression(node, env)
 	case *ast.ReturnStatement:
+		fmt.Println(node)
 		val := Eval(node.ReturnValue, env)
 		if isError(val) {
 			return val
@@ -63,6 +63,7 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		body := node.Body
 		return &object.Function{Parameters: params, Env: env, Body: body}
 	case *ast.StringLiteral:
+		fmt.Println(node)
 		return &object.String{Value: node.Value}
 	case *ast.CallExpression:
 		function := Eval(node.Function, env)
@@ -96,6 +97,7 @@ func evalProgram(program *ast.Program, env *object.Environment) object.Object {
 }
 
 func nativeBooltoBooleanObject(input bool) *object.Boolean {
+	fmt.Println(input)
 	if input {
 		return TRUE
 	} else {
